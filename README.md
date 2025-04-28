@@ -32,7 +32,7 @@ Uma porcentagem é retida sobre cada serviço concluído na plataforma, garantin
 
 👥 Contribuidores
 
-- [Gessyca Moreira] (https://github.com/Geessyca)
+- [Gessyca Moreira](https://github.com/Geessyca)
 
 - [Marcus Vinicius](https://github.com/PyMarcus)
 
