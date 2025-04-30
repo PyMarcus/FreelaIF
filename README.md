@@ -88,6 +88,55 @@ O FreelaIF será sustentado pela retenção de uma porcentagem sobre o valor de 
 - Implementação de sistema de análise automatizada da qualidade dos projetos antes da entrega final.
 - Melhoria contínua dos algoritmos de recomendação.
 
+## Modelagem
+
+![Diagrama BPMN](bpmn_diagram.svg)
+
+### Cliente
+1. **Cadastro/Login**:  
+   O cliente inicia verificando se já possui cadastro na plataforma.
+   - **Caso não tenha**, realiza o cadastro.
+   - **Caso já tenha**, faz o login.
+2. **Definição do Projeto**:  
+   Após o login, o cliente define o projeto e suas características.
+3. **Análise pelo Sistema de Recomendação**:  
+   O sistema analisa o projeto para sugerir desenvolvedores adequados.
+4. **Análise pelos Desenvolvedores**:  
+   O projeto entra em estado de análise e é disponibilizado para todos os desenvolvedores cadastrados.
+5. **Finalização do Projeto**:  
+   Quando o projeto é finalizado, o cliente recebe uma notificação de entrega.
+6. **Avaliação da Entrega**:  
+   O cliente avalia a entrega:
+   - **Se estiver de acordo**: Realiza o pagamento e o processo é encerrado.
+   - **Se não estiver de acordo**: O projeto é ajustado conforme o acordado e retorna para nova entrega.
+     
+### Desenvolvedor
+1. **Cadastro/Login**:  
+   O desenvolvedor verifica se possui cadastro:
+   - **Caso não tenha**, realiza o cadastro e depois faz login.
+   - **Caso já tenha**, faz o login diretamente.
+2. **Verificação de Projetos**:  
+   O desenvolvedor verifica se há projetos disponíveis para serem feitos.
+3. **Análise de Projetos**:  
+   - O desenvolvedor pode ver os projetos disponíveis para análise.
+   - Também pode visualizar os projetos para os quais foi recomendado.
+4. **Aceitação do Projeto**:  
+   O desenvolvedor decide se deseja realizar o projeto.
+   - **Caso não deseje**: O fluxo termina.
+   - **Caso aceite**: Envia uma notificação de aceite e executa o projeto, aguardando a avaliação do cliente.
+   
+### Sistema de Recomendação
+1. **Recepção de Informações**:  
+   O sistema recebe informações sobre o projeto.
+2. **Verificação de Disponibilidade do Projeto**:  
+   O sistema verifica se o projeto está em aberto.
+   - **Caso não esteja**: As recomendações são removidas.
+   - **Caso esteja**: O sistema correlaciona as palavras-chave do projeto com a base de desenvolvedores.
+3. **Verificação de Desenvolvedores**:  
+   O sistema verifica se há desenvolvedores que correspondem às necessidades do projeto.
+   - **Caso não haja**: O processo é encerrado.
+   - **Caso haja**: O sistema envia notificações aos desenvolvedores recomendados e exibe os desenvolvedores recomendados para o cliente.
+---
 ## Contribuidores
 - [Gessyca Moreira](https://github.com/Geessyca)
 - [Marcus Vinicius](https://github.com/PyMarcus)
