@@ -1,7 +1,13 @@
 package domain
 
+import (
+	"time"
+
+	"github.com/google/uuid"
+)
+
 type StudentEntity struct{
- 	ID        string `gorm:"type:uuid;default:uuid_generate_v4();primaryKey"`
+ 	ID        uuid.UUID `gorm:"type:uuid;default:uuid_generate_v4();primaryKey"`
     Name      string
     Email     string `gorm:"uniqueIndex"`
     Username  string `gorm:"uniqueIndex"`
@@ -9,12 +15,12 @@ type StudentEntity struct{
     CPF       string `gorm:"uniqueIndex"`
     Phone     string
     Address   string
-    CreatedAt string `gorm:"autoCreateTime"`
-    UpdatedAt *string
+    CreatedAt time.Time `gorm:"autoCreateTime"`
+    UpdatedAt *time.Time
 }
 
 type CustomerEntity struct{
-	 ID        string `gorm:"type:uuid;default:uuid_generate_v4();primaryKey"`
+	 ID       uuid.UUID `gorm:"type:uuid;default:uuid_generate_v4();primaryKey"`
     Name      string
     Email     string `gorm:"uniqueIndex"`
     Username  string `gorm:"uniqueIndex"`
@@ -23,6 +29,6 @@ type CustomerEntity struct{
     CPF       string `gorm:"uniqueIndex"`
     Phone     string
     Address   string
-    CreatedAt string `gorm:"autoCreateTime"`
-    UpdatedAt *string
+    CreatedAt time.Time `gorm:"autoCreateTime"`
+    UpdatedAt *time.Time
 }
