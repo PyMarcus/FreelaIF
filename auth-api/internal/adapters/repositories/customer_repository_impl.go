@@ -1,6 +1,7 @@
 package repositories
 
 import (
+	"github.com/PyMarcus/FreelaIF/auth-api/auth-api/internal/adapters/utils"
 	"github.com/PyMarcus/FreelaIF/auth-api/auth-api/internal/core/domain"
 	"github.com/PyMarcus/FreelaIF/auth-api/auth-api/internal/core/ports/repositories"
 	"gorm.io/gorm"
@@ -16,8 +17,13 @@ func NewCustomerRepository(db *gorm.DB) repositories.ICustomerRepository {
 	}
 }
 
-// Create a customer
+// Create a customer and hash the password
 func (c *CustomerRepository) Create(customer *domain.CustomerEntity) error {
+	hash, err := utils.HashPassword(customer.Password)
+	if err != nil{
+		return err
+	}
+	customer.Password = hash
 	return c.db.Save(customer).Error
 }
 
