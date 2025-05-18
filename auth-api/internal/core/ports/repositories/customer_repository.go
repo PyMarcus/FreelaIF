@@ -8,3 +8,4 @@ type ICustomerRepository interface {
 	GetCustomerByEmail(email string) (*domain.CustomerEntity, error)
 	ListAll() ([]*domain.CustomerEntity, error)
 }
+//mockgen -source=internal/core/ports/repositories/customer_repository.go -destination=tests/mocks/mock_customer_repository.go -package=mocks
