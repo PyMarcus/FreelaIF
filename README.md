@@ -41,6 +41,11 @@ Além disso, a plataforma contará com recursos de:
 
 O FreelaIF será sustentado pela retenção de uma porcentagem sobre o valor de cada serviço concluído, garantindo a operação e expansão contínua da plataforma.
 
+## Modelo de processos:
+
+Usaremos Scrum associado a inteligência artificial para otimização de tempo.
+Segregando as etapas do fluxo em pequenos serviços de entrega contínua.
+
 ## Público-Alvo
 
 - **Estudantes** do Instituto Federal que desejam atuar como freelancers.
