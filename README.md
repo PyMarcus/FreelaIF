@@ -62,7 +62,7 @@ O FreelaIF será sustentado pela retenção de uma porcentagem sobre o valor de 
 | RF07 | Integração de pagamento e retenção de comissão. |
 | RF08 | Sistema de avaliação de freelancers. |
 | RF09 | Painel administrativo para gestão da plataforma. |
-| RF10 | Módulo de recomendações por palavras-chave. |
+| RF10 | Recomendações de freelances/projetos baseado em palavras-chave. |
 
 ### Não Funcionais
 
