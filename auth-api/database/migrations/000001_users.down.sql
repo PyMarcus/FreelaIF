@@ -1,2 +1,0 @@
-drop customers;
-drop students;
