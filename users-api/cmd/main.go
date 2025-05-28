@@ -3,11 +3,11 @@ package main
 import (
 	"log"
 
-	"github.com/PyMarcus/FreelaIF/auth-api/auth-api/internal/adapters/config"
-	"github.com/PyMarcus/FreelaIF/auth-api/auth-api/internal/adapters/http/handlers"
-	"github.com/PyMarcus/FreelaIF/auth-api/auth-api/internal/adapters/http/routes"
-	"github.com/PyMarcus/FreelaIF/auth-api/auth-api/internal/adapters/repositories"
-	"github.com/PyMarcus/FreelaIF/auth-api/auth-api/internal/core/usecases"
+	"github.com/PyMarcus/FreelaIF/users-api/internal/adapters/config"
+	"github.com/PyMarcus/FreelaIF/users-api/internal/adapters/http/handlers"
+	"github.com/PyMarcus/FreelaIF/users-api/internal/adapters/http/routes"
+	"github.com/PyMarcus/FreelaIF/users-api/internal/adapters/repositories"
+	"github.com/PyMarcus/FreelaIF/users-api/internal/core/usecases"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )

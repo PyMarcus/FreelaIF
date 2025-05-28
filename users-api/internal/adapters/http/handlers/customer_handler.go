@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/PyMarcus/FreelaIF/auth-api/auth-api/internal/adapters/dtos"
-	httpport "github.com/PyMarcus/FreelaIF/auth-api/auth-api/internal/core/ports/http"
-	"github.com/PyMarcus/FreelaIF/auth-api/auth-api/internal/core/usecases"
+	"github.com/PyMarcus/FreelaIF/users-api/internal/adapters/dtos"
+	httpport "github.com/PyMarcus/FreelaIF/users-api/internal/core/ports/http"
+	"github.com/PyMarcus/FreelaIF/users-api/internal/core/usecases"
 	"github.com/gin-gonic/gin"
 )
 

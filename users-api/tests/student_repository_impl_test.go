@@ -3,7 +3,7 @@ package tests
 import (
 	"testing"
 
-	"github.com/PyMarcus/FreelaIF/auth-api/auth-api/tests/mocks"
+	"github.com/PyMarcus/FreelaIF/users-api/tests/mocks"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
 )

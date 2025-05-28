@@ -3,7 +3,7 @@ package tests
 import (
 	"time"
 
-	"github.com/PyMarcus/FreelaIF/auth-api/auth-api/internal/core/domain"
+	"github.com/PyMarcus/FreelaIF/users-api/internal/core/domain"
 	"github.com/google/uuid"
 )
 

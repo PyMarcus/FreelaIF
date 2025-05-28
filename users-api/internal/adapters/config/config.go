@@ -3,7 +3,7 @@ package config
 import (
 	"log"
 
-	"github.com/PyMarcus/FreelaIF/auth-api/auth-api/internal/adapters/constants"
+	"github.com/PyMarcus/FreelaIF/users-api/internal/adapters/constants"
 	"github.com/spf13/viper"
 )
 
@@ -15,7 +15,7 @@ var ConfigSettings *Config
 
 func init() {
 	viper.SetConfigFile(constants.ENV_PATH)
-    viper.SetConfigType("env")
+	viper.SetConfigType("env")
 	viper.AutomaticEnv()
 
 	if err := viper.ReadInConfig(); err != nil {

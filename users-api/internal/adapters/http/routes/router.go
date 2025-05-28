@@ -1,7 +1,7 @@
 package routes
 
 import (
-	httpport "github.com/PyMarcus/FreelaIF/auth-api/auth-api/internal/core/ports/http"
+	httpport "github.com/PyMarcus/FreelaIF/users-api/internal/core/ports/http"
 	"github.com/gin-gonic/gin"
 )
 

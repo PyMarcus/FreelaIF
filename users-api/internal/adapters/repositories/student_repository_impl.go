@@ -1,9 +1,9 @@
 package repositories
 
 import (
-	"github.com/PyMarcus/FreelaIF/auth-api/auth-api/internal/adapters/utils"
-	"github.com/PyMarcus/FreelaIF/auth-api/auth-api/internal/core/domain"
-	"github.com/PyMarcus/FreelaIF/auth-api/auth-api/internal/core/ports/repositories"
+	"github.com/PyMarcus/FreelaIF/users-api/internal/adapters/utils"
+	"github.com/PyMarcus/FreelaIF/users-api/internal/core/domain"
+	"github.com/PyMarcus/FreelaIF/users-api/internal/core/ports/repositories"
 	"gorm.io/gorm"
 )
 

@@ -7,7 +7,7 @@ package mocks
 import (
 	reflect "reflect"
 
-	domain "github.com/PyMarcus/FreelaIF/auth-api/auth-api/internal/core/domain"
+	domain "github.com/PyMarcus/FreelaIF/users-api/internal/core/domain"
 	gomock "github.com/golang/mock/gomock"
 )
 

@@ -3,7 +3,7 @@ package tests
 import (
 	"testing"
 
-	"github.com/PyMarcus/FreelaIF/auth-api/auth-api/internal/adapters/utils"
+	"github.com/PyMarcus/FreelaIF/users-api/internal/adapters/utils"
 	"github.com/stretchr/testify/assert"
 )
 
