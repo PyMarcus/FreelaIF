@@ -11,7 +11,7 @@ type CustomerResponseDTO struct {
 	CNPJ      string    `json:"cnpj,omitempty"`
 	Phone     string    `json:"phone"`
 	Address   string    `json:"address"`
-	CreatedAt time.Time `json:"created_at"`
+	CreatedAt time.Time `json:"created_at" `
 }
 
 type StudentResponseDTO struct {
