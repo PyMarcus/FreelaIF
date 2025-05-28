@@ -18,12 +18,20 @@ func main() {
 	if err != nil {
 		log.Fatalf("Erro ao conectar ao banco: %v", err)
 	}
+
 	customerRepository := repositories.NewCustomerRepository(db)
 	customerUsecase := usecases.NewCustomerUsecase(
 		customerRepository,
 	)
 	customerHandler := handlers.NewCustomerHandler(customerUsecase)
-	router := routes.SetupRouter(customerHandler)
+
+	studentRepository := repositories.NewStudentRepository(db)
+	studentUsecase := usecases.NewStudentUsecase(
+		studentRepository,
+	)
+	studentHandler := handlers.NewStudentHandler(studentUsecase)
+
+	router := routes.SetupRouter(customerHandler, studentHandler)
 
 	if err := router.Run(":8080"); err != nil{
 		log.Fatalf("Erro ao iniciar servidor: %v", err)

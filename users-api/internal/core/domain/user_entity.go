@@ -36,3 +36,7 @@ type CustomerEntity struct{
 func (CustomerEntity) TableName() string{
     return "customers"
 }
+
+func (StudentEntity) TableName() string{
+    return "students"
+}
