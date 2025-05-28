@@ -41,3 +41,4 @@ func (c *CustomerRepository) GetCustomerByUserName(username string) (*domain.Cus
 func (c *CustomerRepository) ListAll() ([]*domain.CustomerEntity, error) {
 	panic("unimplemented")
 }
+

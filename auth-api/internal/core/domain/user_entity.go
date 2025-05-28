@@ -20,7 +20,7 @@ type StudentEntity struct{
 }
 
 type CustomerEntity struct{
-	 ID       uuid.UUID `gorm:"type:uuid;default:uuid_generate_v4();primaryKey"`
+	ID       uuid.UUID `gorm:"type:uuid;default:uuid_generate_v4();primaryKey"`
     Name      string
     Email     string `gorm:"uniqueIndex"`
     Username  string `gorm:"uniqueIndex"`
@@ -31,4 +31,8 @@ type CustomerEntity struct{
     Address   string
     CreatedAt time.Time `gorm:"autoCreateTime"`
     UpdatedAt *time.Time
+}
+
+func (CustomerEntity) TableName() string{
+    return "customers"
 }
