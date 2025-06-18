@@ -13,6 +13,9 @@ import (
 )
 
 func main() {
+	registerInEurekaServer()
+	go heartBeat()
+
 	connStr := config.ConfigSettings.DatabaseUrl
 	db, err := gorm.Open(postgres.Open(connStr), &gorm.Config{})
 	if err != nil {
