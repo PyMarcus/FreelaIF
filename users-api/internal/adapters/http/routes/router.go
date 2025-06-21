@@ -5,7 +5,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func SetupRouter(customerHandler httpport.CustomerHandler, studentHandler httpport.StudentHandler) *gin.Engine{
+func SetupRouter(customerHandler httpport.CustomerHandler, studentHandler httpport.StudentHandler, authHandler httpport.AuthHandler) *gin.Engine{
 	router := gin.Default()
 	v1 := router.Group("/api/v1")
 	{
@@ -20,6 +20,9 @@ func SetupRouter(customerHandler httpport.CustomerHandler, studentHandler httppo
 		v1.GET("/students", studentHandler.GetAll)
 		v1.GET("/students/by-email/:email", studentHandler.GetStudentByEmail)
 		v1.GET("/students/by-username/:username", studentHandler.GetStudentByUserName)
+
+		// auth endpoint
+		v1.POST("/login", authHandler.GetToken)
 
 	}
 

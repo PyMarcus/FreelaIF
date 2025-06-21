@@ -1,0 +1,11 @@
+services:
+  api-gateway:
+    build: .
+    restart: always
+    ports:
+      - 8765:8765
+    networks:
+      - microservices-network
+networks:
+  microservices-network:
+    external: true

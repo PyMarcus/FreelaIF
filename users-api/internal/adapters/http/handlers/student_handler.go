@@ -12,7 +12,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-var ErrStudentNotFound = errors.New("Student not found")
+var ErrStudentNotFound = errors.New("student not found")
 
 type StudentHandler struct {
 	usecase *usecases.StudentUsecase
