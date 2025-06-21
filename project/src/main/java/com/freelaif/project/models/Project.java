@@ -17,10 +17,10 @@ import java.time.LocalDate;
 public class Project {
     @Id
     private int id;
-    private int clientId;
-    private Integer developerId;
     private String title;
     private String description;
+    private Integer developerId;
+    private int clientId;
     private LocalDate createdAt;
     private LocalDate dateLimit;
     public enum Status {
