@@ -1,4 +1,4 @@
-package com.freelaif.project.controllers;
+package com.freelaif.project.service;
 
 import com.freelaif.project.models.Project;
 import com.freelaif.project.repository.ProjectRepository;
