@@ -13,7 +13,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Document(collation = "projects")
+@Document(collection = "projects")
 public class Project {
     @Id
     private int id;
@@ -23,6 +23,7 @@ public class Project {
     private int clientId;
     private LocalDate createdAt;
     private LocalDate dateLimit;
+    private Status status;
     public enum Status {
         CREATED,
         COMPLETE,
