@@ -5,7 +5,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
 class ProjectApplicationTests {
-
+	/*
+	* TODO: rota de meusprojetos, atualizar id do desenvolvedor associado ao projeto, remover desenvolvedor, remover projeto
+	* */
 	@Test
 	void contextLoads() {
 	}
