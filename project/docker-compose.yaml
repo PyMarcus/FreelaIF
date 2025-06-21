@@ -1,0 +1,31 @@
+services:
+  spring-projects-api:
+    build: .
+    restart: always
+    ports:
+      - 8100:8100
+    networks:
+      - microservices-network
+    depends_on:
+      - mongodb-projects
+
+  mongodb-projects:
+    image: mongo:7.0
+    container_name: mongodb-container
+    restart: always
+    environment:
+      MONGO_INITDB_DATABASE: freelaif_db
+      MONGO_INITDB_ROOT_USERNAME: freelaif
+      MONGO_INITDB_ROOT_PASSWORD: freelaif
+    ports:
+      - 27017:27017
+    volumes:
+      - mongo-data:/data/db
+
+volumes:
+  mongo-data:
+
+
+networks:
+  microservices-network:
+    external: true
