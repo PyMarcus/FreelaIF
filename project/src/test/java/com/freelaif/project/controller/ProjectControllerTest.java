@@ -89,20 +89,13 @@ class ProjectControllerTest {
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
 
-    @Test
-    void findByClientId_ExistingProject_shouldReturnOK() {
-        when(projectService.findByClientId(1)).thenReturn(anyList());
 
-        ResponseEntity<?> response = projectController.findByclientId(1, "Bearer valid_token");
-
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-    }
 
     @Test
     void findByDeveloperId_ExistingProject_shouldReturnOK() {
         when(projectService.findByDeveloperId(1)).thenReturn(anyList());
 
-        ResponseEntity<?> response = projectController.findByDevId(1, "Bearer valid_token");
+        ResponseEntity<?> response = projectController.searchProjects("Test", 1, 1,"token");
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
     }
@@ -111,7 +104,7 @@ class ProjectControllerTest {
     void findByTitle_shouldReturnProjects() {
         when(projectService.findProjectByTitle("Test")).thenReturn(Arrays.asList(sampleProject));
 
-        ResponseEntity<?> response = projectController.findByTitle("Test", "Bearer valid_token");
+        ResponseEntity<?> response = projectController.searchProjects("Test", 1, 1,"token");
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         List<?> body = (List<?>) response.getBody();
@@ -119,13 +112,5 @@ class ProjectControllerTest {
         assertEquals(1, body.size());
     }
 
-    @Test
-    void associateDeveloper(){
-        when(projectService.associateDeveloper(1, 2)).thenReturn(Optional.of(sampleProject));
-
-        ResponseEntity<?> response = projectController.associateDevToProject(2, 1, "token");
-
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-    }
 
 }

@@ -13,136 +13,114 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api/v1/projects")
 public class ProjectController {
+
     @Autowired
-    ProjectService projectService;
+    private ProjectService projectService;
 
     @PostMapping
     public ResponseEntity<?> createProject(
             @RequestHeader("Authorization") String token,
-            @RequestBody Project project
-    ){
-        if(token.isBlank()){
+            @RequestBody Project project) {
+        if (token.isBlank()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Missing token.");
         }
 
-        Project _project = projectService.save(project);
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(_project);
+        Project createdProject = projectService.save(project);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdProject);
     }
 
     @GetMapping
     public ResponseEntity<?> findAll(
-            @RequestHeader("Authorization") String token
-    ){
-        if(token.isBlank()){
+            @RequestHeader("Authorization") String token) {
+        if (token.isBlank()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Missing token.");
         }
 
-        List<Project> _projects = projectService.findAll();
-
-        return ResponseEntity.status(HttpStatus.OK).body(_projects);
+        List<Project> projects = projectService.findAll();
+        return ResponseEntity.ok(projects);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<?> findById(
             @PathVariable Integer id,
-            @RequestHeader("Authorization") String token
-    ){
-        if(token.isBlank()){
+            @RequestHeader("Authorization") String token) {
+        if (token.isBlank()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Missing token.");
         }
 
         Optional<Project> projectOptional = projectService.findById(id);
+        return projectOptional
+                .<ResponseEntity<?>>map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body("Project not found with id: " + id));
+    }
 
-        if (projectOptional.isPresent()) {
-            return ResponseEntity.ok(projectOptional.get());
+    @GetMapping("/search")
+    public ResponseEntity<?> searchProjects(
+            @RequestParam(required = false) String title,
+            @RequestParam(required = false) Integer devId,
+            @RequestParam(required = false) Integer clientId,
+            @RequestHeader("Authorization") String token) {
+        if (token.isBlank()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Missing token.");
+        }
+
+        if (title != null) {
+            List<Project> projects = projectService.findProjectByTitle(title);
+            return ResponseEntity.ok(projects);
+        } else if (devId != null) {
+            List<Project> projects = projectService.findByDeveloperId(devId);
+            return ResponseEntity.ok(projects);
+        } else if (clientId != null) {
+            List<Project> projects = projectService.findByClientId(clientId);
+            return ResponseEntity.ok(projects);
         } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Project not found with id: " + id);
+            return ResponseEntity.badRequest().body("Please provide a search parameter: title, devId, or clientId.");
         }
     }
 
-    @GetMapping("/title={title}")
-    public ResponseEntity<?> findByTitle(
-            @PathVariable String title,
-            @RequestHeader("Authorization") String token
-    ){
-        if(token.isBlank()){
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Missing token.");
-        }
-
-        List<Project> projects = projectService.findProjectByTitle(title);
-        return ResponseEntity.status(HttpStatus.OK).body(projects);
-    }
-
-    @GetMapping("/devId={devId}")
-    public ResponseEntity<?> findByDevId(
-            @PathVariable int devId,
-            @RequestHeader("Authorization") String token
-    ){
-        if(token.isBlank()){
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Missing token.");
-        }
-
-        List<Project> projects = projectService.findByDeveloperId(devId);
-        return ResponseEntity.status(HttpStatus.OK).body(projects);
-    }
-
-    @GetMapping("/clientId={clientId}")
-    public ResponseEntity<?> findByclientId(
-            @PathVariable int clientId,
-            @RequestHeader("Authorization") String token
-    ){
-        if(token.isBlank()){
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Missing token.");
-        }
-
-        List<Project> projects = projectService.findByClientId(clientId);
-        return ResponseEntity.status(HttpStatus.OK).body(projects);
-    }
-
-    @PutMapping("/associate")
+    @PutMapping("/{id}/developer/{devId}")
     public ResponseEntity<?> associateDevToProject(
-            @RequestBody int devId,
-            @RequestBody int projectId,
-            @RequestHeader("Authorization") String token){
-        if(token.isBlank()){
+            @PathVariable int id,
+            @PathVariable int devId,
+            @RequestHeader("Authorization") String token) {
+        if (token.isBlank()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Missing token.");
         }
-        Optional<Project> _project = projectService.associateDeveloper(projectId, devId);
-        if(_project.isPresent()){
-            return ResponseEntity.status(HttpStatus.OK).body(_project);
-        }else{
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Fail to create association.");
+
+        Optional<Project> updatedProject = projectService.associateDeveloper(id, devId);
+        return updatedProject.<ResponseEntity<?>>map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to associate developer."));
+    }
+
+    @DeleteMapping("/{id}/developer")
+    public ResponseEntity<?> removeDeveloperFromProject(
+            @PathVariable int id,
+            @RequestHeader("Authorization") String token) {
+        if (token.isBlank()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Missing token.");
+        }
+
+        boolean success = projectService.removeDevFromProject(id);
+        if (success) {
+            return ResponseEntity.ok("Developer removed from project.");
+        } else {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to remove developer.");
         }
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteProject(
             @PathVariable int id,
-            @RequestHeader("Authorization") String token){
-        if(token.isBlank()){
+            @RequestHeader("Authorization") String token) {
+        if (token.isBlank()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Missing token.");
         }
-        boolean _project = projectService.removeProject(id);
-        if(_project){
-            return ResponseEntity.status(HttpStatus.OK).body("Project removed.");
-        }else{
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Fail to delete project.");
-        }
-    }
 
-    @DeleteMapping("/developerId={developerId}&projectId={projectId}")
-    public ResponseEntity<?> deleteAssociatedDeveloperFrom(
-            @PathVariable int projectId,
-            @RequestHeader("Authorization") String token){
-        if(token.isBlank()){
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Missing token.");
-        }
-        boolean _project = projectService.removeDevFromProject(projectId);
-        if(_project){
-            return ResponseEntity.status(HttpStatus.OK).body("Dev removed from project.");
-        }else{
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Fail to delete developer.");
+        boolean success = projectService.removeProject(id);
+        if (success) {
+            return ResponseEntity.ok("Project removed.");
+        } else {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to delete project.");
         }
     }
 }
