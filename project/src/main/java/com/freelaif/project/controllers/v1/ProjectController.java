@@ -40,7 +40,7 @@ public class ProjectController {
         return ResponseEntity.ok(projects);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/by-id/{id}")
     public ResponseEntity<?> findById(
             @PathVariable Integer id,
             @RequestHeader("Authorization") String token) {

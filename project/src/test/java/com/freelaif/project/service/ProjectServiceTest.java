@@ -25,6 +25,9 @@ public class ProjectServiceTest {
     @Mock
     private ProjectRepository projectRepository;
 
+    @Mock
+    private SequenceGeneratorService sequenceGeneratorService;
+
     @InjectMocks
     private ProjectService projectService;
 
@@ -88,7 +91,7 @@ public class ProjectServiceTest {
 
         Project _project = projectService.save(project);
         assertThat(_project).isNotNull();
-        assertThat(_project.getId()).isEqualTo(1);
+        assertThat(_project.getId()).isEqualTo(0);
 
     }
 

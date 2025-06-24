@@ -13,7 +13,11 @@ public class ProjectService {
     @Autowired
     private ProjectRepository projectRepository;
 
+    @Autowired
+    private SequenceGeneratorService sequenceGeneratorService;
+
     public Project save(Project project){
+        project.setId(sequenceGeneratorService.getNextSequence("projects"));
         return projectRepository.save(project);
     }
 
