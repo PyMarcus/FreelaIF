@@ -24,6 +24,8 @@ public class ProjectRepositoryTest {
     void setUp() {
         project = new Project();
         project.setId(1);
+        project.setClientId(1);
+        project.setDeveloperId(1);
         project.setTitle(title);
         project.setStatus(Project.Status.PROGRESS);
     }
@@ -39,6 +41,27 @@ public class ProjectRepositoryTest {
     }
 
     @Test
+    void getProjectClientId_WhenProjectExists_ReturnsProject() {
+        when(projectRepository.findByClientId(1)).thenReturn(List.of(project));
+
+        List<Project> savedProject = projectRepository.findByClientId(1);
+
+        assertThat(savedProject).isNotEmpty();
+        assertThat(savedProject.get(0).getId()).isEqualTo(1);
+
+    }
+
+    @Test
+    void getProjectDevId_WhenProjectExists_ReturnsProject() {
+        when(projectRepository.findByDeveloperId(1)).thenReturn(List.of(project));
+
+        List<Project> _savedProject = projectRepository.findByDeveloperId(1);
+
+        assertThat(_savedProject).isNotEmpty();
+        assertThat(_savedProject.get(0).getId()).isEqualTo(1);
+    }
+
+    @Test
     void findByTitle_WhenProjectExists_ReturnsProjectList(){
         when(projectRepository.findByTitle(title)).thenReturn(List.of(project));
 
@@ -47,4 +70,6 @@ public class ProjectRepositoryTest {
         assertThat(projects).isNotEmpty();
         assertThat(projects.get(0).getId()).isEqualTo(1);
     }
+
+
 }

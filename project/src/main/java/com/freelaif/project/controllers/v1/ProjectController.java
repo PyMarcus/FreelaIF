@@ -74,4 +74,75 @@ public class ProjectController {
         return ResponseEntity.status(HttpStatus.OK).body(projects);
     }
 
+    @GetMapping("/devId={devId}")
+    public ResponseEntity<?> findByDevId(
+            @PathVariable int devId,
+            @RequestHeader("Authorization") String token
+    ){
+        if(token.isBlank()){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Missing token.");
+        }
+
+        List<Project> projects = projectService.findByDeveloperId(devId);
+        return ResponseEntity.status(HttpStatus.OK).body(projects);
+    }
+
+    @GetMapping("/clientId={clientId}")
+    public ResponseEntity<?> findByclientId(
+            @PathVariable int clientId,
+            @RequestHeader("Authorization") String token
+    ){
+        if(token.isBlank()){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Missing token.");
+        }
+
+        List<Project> projects = projectService.findByClientId(clientId);
+        return ResponseEntity.status(HttpStatus.OK).body(projects);
+    }
+
+    @PutMapping("/associate")
+    public ResponseEntity<?> associateDevToProject(
+            @RequestBody int devId,
+            @RequestBody int projectId,
+            @RequestHeader("Authorization") String token){
+        if(token.isBlank()){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Missing token.");
+        }
+        Optional<Project> _project = projectService.associateDeveloper(projectId, devId);
+        if(_project.isPresent()){
+            return ResponseEntity.status(HttpStatus.OK).body(_project);
+        }else{
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Fail to create association.");
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteProject(
+            @PathVariable int id,
+            @RequestHeader("Authorization") String token){
+        if(token.isBlank()){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Missing token.");
+        }
+        boolean _project = projectService.removeProject(id);
+        if(_project){
+            return ResponseEntity.status(HttpStatus.OK).body("Project removed.");
+        }else{
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Fail to delete project.");
+        }
+    }
+
+    @DeleteMapping("/developerId={developerId}&projectId={projectId}")
+    public ResponseEntity<?> deleteAssociatedDeveloperFrom(
+            @PathVariable int projectId,
+            @RequestHeader("Authorization") String token){
+        if(token.isBlank()){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Missing token.");
+        }
+        boolean _project = projectService.removeDevFromProject(projectId);
+        if(_project){
+            return ResponseEntity.status(HttpStatus.OK).body("Dev removed from project.");
+        }else{
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Fail to delete developer.");
+        }
+    }
 }

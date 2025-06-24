@@ -48,6 +48,31 @@ public class ProjectServiceTest {
 
     }
 
+
+    @Test
+    void findByClientById_WhenProjectExists_ReturnsProject(){
+        when(projectService.findByClientId(1)).thenReturn(List.of(project));
+
+        List<Project> projectResponse = projectService.findByClientId(1);
+        projectResponse.forEach( project1 -> {
+                    assertThat(project1.getId()).isEqualTo(1);
+                }
+        );
+
+    }
+
+    @Test
+    void findByDevIdById_WhenProjectExists_ReturnsProject(){
+        when(projectService.findByDeveloperId(1)).thenReturn(List.of(project));
+
+        List<Project> projectResponse = projectService.findByDeveloperId(1);
+        projectResponse.forEach( project1 -> {
+                    assertThat(project1.getId()).isEqualTo(1);
+                }
+        );
+
+    }
+
     @Test
     void findByIdByTitle_WhenProjectExists_ReturnsProject(){
         when(projectService.findProjectByTitle(title)).thenReturn(List.of(project));
@@ -66,4 +91,22 @@ public class ProjectServiceTest {
         assertThat(_project.getId()).isEqualTo(1);
 
     }
+
+    @Test
+    void update_IfProjectExists_ReturnsProject(){
+        when(projectService.associateDeveloper(1, 1)).thenReturn(Optional.of(project));
+
+        Optional<Project> _project1 = projectService.findById(1);
+        _project1.ifPresent(
+                project1 -> assertThat(project1.getDeveloperId()).isNull()
+        );
+
+        Optional<Project> _project = projectService.associateDeveloper(1, 1);
+
+        _project.ifPresent(
+                project1 -> assertThat(project1.getDeveloperId()).isEqualTo(1)
+        );
+    }
+
+
 }

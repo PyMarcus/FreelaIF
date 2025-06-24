@@ -32,4 +32,40 @@ public class ProjectService {
     public List<Project> findByDeveloperId(int developerId){
         return projectRepository.findByDeveloperId(developerId);
     }
+
+    public List<Project> findByClientId(int clientId){
+        return projectRepository.findByClientId(clientId);
+    }
+
+    public Optional<Project> associateDeveloper(int projectId, int developerId) {
+        Optional<Project> projectOptional = projectRepository.findById(projectId);
+        if (projectOptional.isPresent()) {
+            Project project = projectOptional.get();
+            project.setDeveloperId(developerId);
+            projectRepository.save(project);
+            return Optional.of(project);
+        }
+        return Optional.empty();
+    }
+
+    public boolean removeProject(int projectId) {
+        Optional<Project> projectOptional = projectRepository.findById(projectId);
+        if (projectOptional.isPresent()) {
+            Project project = projectOptional.get();
+            projectRepository.delete(project);
+            return true;
+        }
+        return false;
+    }
+
+    public boolean removeDevFromProject(int projectId) {
+        Optional<Project> projectOptional = projectRepository.findById(projectId);
+        if (projectOptional.isPresent()) {
+            Project project = projectOptional.get();
+            project.setDeveloperId(null);
+            projectRepository.save(project);
+            return true;
+        }
+        return false;
+    }
 }
