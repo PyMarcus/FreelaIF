@@ -1,0 +1,103 @@
+version: '3.9'
+
+services:
+  eureka-server:
+    image: naming-server_naming-server
+    container_name: eureka-server
+    restart: always
+    ports:
+      - "8761:8761"
+    networks:
+      - microservices-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8761/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  postgres-db-users-api:
+    image: postgres:15
+    container_name: postgres-db-users-api
+    restart: always
+    environment:
+      POSTGRES_USER: login
+      POSTGRES_PASSWORD: login
+      POSTGRES_DB: login_db
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - microservices-network
+
+  mongodb-projects:
+    image: mongo:7.0
+    restart: always
+    environment:
+      MONGO_INITDB_DATABASE: freelaif_db
+      MONGO_INITDB_ROOT_USERNAME: freelaif
+      MONGO_INITDB_ROOT_PASSWORD: freelaif
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - microservices-network
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  users-api:
+    image: users-api_users-api
+    container_name: users-api-container
+    restart: always
+    ports:
+      - "8080:8080"
+    depends_on:
+      - eureka-server
+      - postgres-db-users-api
+    networks:
+      - microservices-network
+    environment:
+      - EUREKA_SERVER=eureka-server
+      - DB_HOST=postgres-db-users-api
+
+  spring-projects-api:
+    image: project_spring-projects-api
+    container_name: spring-projects-api-container
+    restart: always
+    ports:
+      - "8101:8101"
+    depends_on:
+      eureka-server:
+        condition: service_healthy
+      mongodb-projects:
+        condition: service_healthy
+    networks:
+      - microservices-network
+    environment:
+      - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://eureka-server:8761/eureka
+
+  api-gateway:
+    image: api-gateway_api-gateway
+    container_name: api-gateway-container
+    restart: always
+    ports:
+      - "8765:8765"
+    depends_on:
+      - eureka-server
+      - users-api
+      - spring-projects-api
+    networks:
+      - microservices-network
+    environment:
+      - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://eureka-server:8761/eureka
+
+volumes:
+  pgdata:
+  mongo-data:
+
+networks:
+  microservices-network:
+    external: true
+

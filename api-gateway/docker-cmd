@@ -1,0 +1,12 @@
+# Criar rede
+docker network create microservices-network
+
+# Parar containers atuais
+docker stop $(docker ps -q)
+
+# Executar containers na mesma rede
+docker run -d --name eureka-server --network microservices-network -p 8761:8761 naming-server_naming-server
+
+docker run -d --name users-api --network microservices-network -p 8080:8080 users-api_users-api
+
+docker run -d --name api-gateway --network microservices-network -p 8765:8765 api-gateway_api-gateway

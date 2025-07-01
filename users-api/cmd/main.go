@@ -34,7 +34,11 @@ func main() {
 	)
 	studentHandler := handlers.NewStudentHandler(studentUsecase)
 
-	router := routes.SetupRouter(customerHandler, studentHandler)
+	authRepository := repositories.NewAuthRepository(db)
+	authUsecase := usecases.NewAuthUsecase(authRepository)
+	authHandler := handlers.NewLoginHandler(authUsecase)
+
+	router := routes.SetupRouter(customerHandler, studentHandler, authHandler)
 
 	if err := router.Run(":8080"); err != nil{
 		log.Fatalf("Erro ao iniciar servidor: %v", err)

@@ -8,7 +8,7 @@ services:
     depends_on:
       - postgres-db-users-api
     networks:
-      - private-postgres-db-network
+      - microservices-network
 
   postgres-db-users-api:
     image: postgres:15
@@ -19,11 +19,11 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql/data
     networks:
-      - private-postgres-db-network
+      - microservices-network
 
 networks:
-  private-postgres-db-network:
-    driver: bridge
+  microservices-network:
+    external: true
 
 volumes:
   pgdata:
