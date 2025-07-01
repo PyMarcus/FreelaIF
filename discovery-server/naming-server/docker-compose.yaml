@@ -1,0 +1,8 @@
+services:
+  naming-server:
+    build: .
+    restart: always
+    container_name: discovery-server
+    ports:
+      - 8761:8761
+

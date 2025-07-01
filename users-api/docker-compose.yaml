@@ -1,0 +1,29 @@
+services:
+  users-api:
+    build: .
+    restart: always
+    container_name: users-api-container
+    ports:
+      - 8080:8080
+    depends_on:
+      - postgres-db-users-api
+    networks:
+      - private-postgres-db-network
+
+  postgres-db-users-api:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: login
+      POSTGRES_PASSWORD: login
+      POSTGRES_DB: login_db
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - private-postgres-db-network
+
+networks:
+  private-postgres-db-network:
+    driver: bridge
+
+volumes:
+  pgdata:
