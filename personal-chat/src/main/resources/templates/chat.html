@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>FreelaIF - Chat Privado</title>
+    <script src="https://unpkg.com/sockjs-client/dist/sockjs.min.js"></script>
+    <script src="https://unpkg.com/stompjs/lib/stomp.min.js"></script>
+</head>
+<body>
+
+<h2>FreelaIF - Chat Privado</h2>
+
+<div>
+    <label for="from">Seu nome:</label>
+    <input id="from" placeholder="Digite seu nome para conectar"/>
+    <button onclick="connect()" id="connectButton">Conectar</button>
+    <button onclick="disconnect()" id="disconnectButton" disabled>Desconectar</button>
+</div>
+
+<div id="chat-section" style="display: none;">
+    <hr>
+    <p>
+        <label for="to">Enviar para:</label>
+        <input id="to" placeholder="Destinatário"/>
+    </p>
+    <p>
+        <label for="content">Mensagem:</label>
+        <input id="content" placeholder="Escreva sua mensagem"/>
+    </p>
+    <button onclick="sendMessage()">Enviar</button>
+    <hr>
+    <h3>Mensagens Recebidas:</h3>
+    <ul id="messages"></ul>
+</div>
+
+<script>
+    let stompClient = null;
+
+    function setConnected(connected) {
+        document.getElementById("connectButton").disabled = connected;
+        document.getElementById("disconnectButton").disabled = !connected;
+        document.getElementById("from").disabled = connected;
+        document.getElementById("chat-section").style.display = connected ? 'block' : 'none';
+        document.getElementById("messages").innerHTML = '';
+    }
+
+    function connect() {
+        const user = document.getElementById("from").value;
+        if (!user) {
+            alert("Por favor, insira seu nome para conectar.");
+            return;
+        }
+
+        const socket = new SockJS('/ws');
+        stompClient = Stomp.over(socket);
+
+        stompClient.connect({}, function (frame) {
+            setConnected(true);
+            console.log('Conectado: ' + frame);
+
+            // Subscribe to the specific user queue for private messages
+            stompClient.subscribe('/user/queue/messages', function (msg) {
+                const message = JSON.parse(msg.body);
+                showMessage(message.from + ": " + message.content);
+            });
+        }, function(error) {
+            console.error('Erro de conexão: ' + error);
+            alert("Não foi possível conectar. Verifique o console para mais detalhes.");
+        });
+    }
+
+    function disconnect() {
+        if (stompClient !== null) {
+            stompClient.disconnect();
+        }
+        setConnected(false);
+        console.log("Desconectado");
+    }
+
+    function sendMessage() {
+        const from = document.getElementById("from").value;
+        const to = document.getElementById("to").value;
+        const content = document.getElementById("content").value;
+
+        if (to && content && stompClient) {
+            stompClient.send("/app/private-message", {}, JSON.stringify({
+                'from': from,
+                'to': to,
+                'content': content,
+                'timestamp': new Date().toISOString()
+            }));
+            // Optionally, display the sent message immediately
+            showMessage("Eu para " + to + ": " + content);
+            document.getElementById("content").value = '';
+        } else {
+            alert("Certifique-se de que o destinatário e a mensagem não estão vazios.");
+        }
+    }
+
+    function showMessage(message) {
+        const li = document.createElement("li");
+        li.innerText = message;
+        document.getElementById("messages").appendChild(li);
+    }
+
+</script>
+
+</body>
+</html>
