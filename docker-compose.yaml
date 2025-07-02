@@ -15,6 +15,15 @@ services:
       timeout: 5s
       retries: 10
 
+  config-server:
+    image: config-server_config-server
+    container_name: config-server
+    restart: always
+    ports:
+      - "8086:8086"
+    networks:
+      - microservices-network
+
   postgres-db-users-api:
     image: postgres:15
     container_name: postgres-db-users-api
@@ -92,6 +101,28 @@ services:
       - microservices-network
     environment:
       - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://eureka-server:8761/eureka
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+  recommender-db:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: recommender
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+  recommender-service:
+    build: ./recommender-service
+    depends_on:
+      - rabbitmq
+      - recommender-db
+  email-service:
+    build: ./email-service
+    depends_on:
+      - rabbitmq
 
 volumes:
   pgdata:
