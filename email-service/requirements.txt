@@ -1,5 +1,4 @@
 pika
 requests
-logging
 email-validator
 python-dotenv

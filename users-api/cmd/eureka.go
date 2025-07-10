@@ -12,7 +12,7 @@ import (
 
 // registerInEurekaServer: sent to discovery server, the api address
 func registerInEurekaServer() {
-	eurekaURL := "http://eureka-server:8761/eureka/apps/USERS-API"
+	eurekaURL := "http://localhost:8761/eureka/apps/USERS-API"
 	payload := `
 	<instance>
 		<hostName>users-api-container</hostName>
@@ -48,7 +48,7 @@ func registerInEurekaServer() {
 
 // __sendHeartBeat: keep communication with the discovery server
 func __sendHeartBeat() {
-	url := "http://eureka-server:8761/eureka/apps/USERS-API/users-api"
+	url := "http://localhost:8761/eureka/apps/USERS-API/users-api"
 	req, _ := http.NewRequest("PUT", url, nil)
 	client := &http.Client{}
 	resp, err := client.Do(req)

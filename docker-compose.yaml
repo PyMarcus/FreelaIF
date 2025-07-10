@@ -2,7 +2,7 @@ version: '3.9'
 
 services:
   eureka-server:
-    image: naming-server_naming-server
+    build: ./discovery-server/naming-server
     container_name: eureka-server
     restart: always
     ports:
@@ -16,13 +16,18 @@ services:
       retries: 10
 
   config-server:
-    image: config-server_config-server
+    build: ./config-server/config-server
     container_name: config-server
     restart: always
     ports:
       - "8086:8086"
     networks:
       - microservices-network
+    depends_on:
+      eureka-server:
+        condition: service_healthy
+    environment:
+      - EUREKA_SERVER=http://localhost:8761/eureka    
 
   postgres-db-users-api:
     image: postgres:15
@@ -57,22 +62,26 @@ services:
       retries: 5
 
   users-api:
-    image: users-api_users-api
+    build: ./users-api
     container_name: users-api-container
     restart: always
     ports:
       - "8080:8080"
     depends_on:
-      - eureka-server
-      - postgres-db-users-api
+      eureka-server:
+        condition: service_healthy
+      config-server:
+        condition: service_started
+      postgres-db-users-api:
+        condition: service_started
     networks:
       - microservices-network
     environment:
-      - EUREKA_SERVER=eureka-server
-      - DB_HOST=postgres-db-users-api
+      - EUREKA_SERVER=http://localhost:8761/eureka
+      - CONFIG_SERVER=http://config-server:8086
 
   spring-projects-api:
-    image: project_spring-projects-api
+    build: ./project
     container_name: spring-projects-api-container
     restart: always
     ports:
@@ -80,49 +89,15 @@ services:
     depends_on:
       eureka-server:
         condition: service_healthy
+      config-server:
+        condition: service_started
       mongodb-projects:
         condition: service_healthy
     networks:
       - microservices-network
     environment:
-      - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://eureka-server:8761/eureka
-
-  api-gateway:
-    image: api-gateway_api-gateway
-    container_name: api-gateway-container
-    restart: always
-    ports:
-      - "8765:8765"
-    depends_on:
-      - eureka-server
-      - users-api
-      - spring-projects-api
-    networks:
-      - microservices-network
-    environment:
-      - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://eureka-server:8761/eureka
-  rabbitmq:
-    image: rabbitmq:3-management
-    ports:
-      - "5672:5672"
-      - "15672:15672"
-  recommender-db:
-    image: postgres:15
-    environment:
-      POSTGRES_DB: recommender
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-    ports:
-      - "5432:5432"
-  recommender-service:
-    build: ./recommender-service
-    depends_on:
-      - rabbitmq
-      - recommender-db
-  email-service:
-    build: ./email-service
-    depends_on:
-      - rabbitmq
+      - EUREKA_SERVER=http://localhost:8761/eureka
+      - CONFIG_SERVER=http://config-server:8086
 
 volumes:
   pgdata:
