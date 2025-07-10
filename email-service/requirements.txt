@@ -1,0 +1,4 @@
+pika
+requests
+email-validator
+python-dotenv

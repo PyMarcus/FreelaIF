@@ -10,6 +10,9 @@ services:
     networks:
       - microservices-network
 
+    environment:
+      - EUREKA_SERVER=http://localhost:8761/eureka
+
   postgres-db-users-api:
     image: postgres:15
     environment:

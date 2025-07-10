@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"log"
 	"net/http"
 
 	"github.com/PyMarcus/FreelaIF/users-api/internal/adapters/repositories"
@@ -35,6 +36,8 @@ func (lh *LoginHandler) GetToken(ctx *gin.Context) {
 		ctx.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid credentials"})
 		return
 	}
+
+	log.Println(user)
 
 	token := lh.createToken(user)
 

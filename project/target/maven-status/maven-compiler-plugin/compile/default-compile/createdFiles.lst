@@ -1,0 +1,9 @@
+com/freelaif/project/models/Project$Status.class
+com/freelaif/project/models/Project.class
+com/freelaif/project/service/SequenceGeneratorService.class
+com/freelaif/project/repository/ProjectRepository.class
+com/freelaif/project/ProjectApplication.class
+com/freelaif/project/service/ProjectService.class
+com/freelaif/project/models/Project$ProjectBuilder.class
+com/freelaif/project/controllers/v1/ProjectController.class
+com/freelaif/project/models/Counter.class

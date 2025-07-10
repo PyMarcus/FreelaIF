@@ -7,16 +7,16 @@ import (
 )
 
 type AuthUsecase struct {
-	repo *repositories.IAuthRepository[r.User]
+	repo repositories.IAuthRepository[r.User]
 }
 
-func NewAuthUsecase(repo *repositories.IAuthRepository[r.User]) repositories.IAuthRepository[r.User] {
-	return &AuthUsecase{
-		repo: repo,
-	}
+func NewAuthUsecase(repo repositories.IAuthRepository[r.User]) *AuthUsecase {
+	   return &AuthUsecase{
+			   repo: repo,
+	   }
 }
 
 func (au AuthUsecase) GetUser(email, password string) (r.User, error) {
 	user, _ := au.GetUser(email, password)
-	return (user, nil)
+	return user, nil
 }

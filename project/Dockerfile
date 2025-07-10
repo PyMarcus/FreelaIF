@@ -1,9 +1,18 @@
-FROM openjdk:17-jdk-alpine
+FROM maven:3.9.6-eclipse-temurin-21 AS build
 
-ARG JAR_FILE=target/*.jar
+WORKDIR /app
 
-COPY ${JAR_FILE} app.jar
+COPY pom.xml .
+COPY src ./src
+
+RUN mvn clean package -DskipTests
+
+FROM eclipse-temurin:21-jdk
+
+WORKDIR /app
+
+COPY --from=build /app/target/*.jar app.jar
 
 EXPOSE 8100
 
-ENTRYPOINT ["java", "-jar", "/app.jar"]
+ENTRYPOINT ["java", "-jar", "app.jar"]
