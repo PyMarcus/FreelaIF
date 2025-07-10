@@ -1,8 +1,9 @@
-version: '3.9'
+version: "3.9"
 
 services:
   eureka-server:
     build: ./discovery-server/naming-server
+    platform: linux/amd64
     container_name: eureka-server
     restart: always
     ports:
@@ -17,6 +18,7 @@ services:
 
   config-server:
     build: ./config-server/config-server
+    platform: linux/amd64
     container_name: config-server
     restart: always
     ports:
@@ -27,7 +29,7 @@ services:
       eureka-server:
         condition: service_healthy
     environment:
-      - EUREKA_SERVER=http://localhost:8761/eureka    
+      - EUREKA_SERVER=http://eureka-server:8761/eureka
 
   postgres-db-users-api:
     image: postgres:15
@@ -63,6 +65,7 @@ services:
 
   users-api:
     build: ./users-api
+    platform: linux/amd64
     container_name: users-api-container
     restart: always
     ports:
@@ -77,11 +80,12 @@ services:
     networks:
       - microservices-network
     environment:
-      - EUREKA_SERVER=http://localhost:8761/eureka
+      - EUREKA_SERVER=http://eureka-server:8761/eureka
       - CONFIG_SERVER=http://config-server:8086
 
   spring-projects-api:
     build: ./project
+    platform: linux/amd64
     container_name: spring-projects-api-container
     restart: always
     ports:
@@ -96,7 +100,7 @@ services:
     networks:
       - microservices-network
     environment:
-      - EUREKA_SERVER=http://localhost:8761/eureka
+      - EUREKA_SERVER=http://eureka-server:8761/eureka
       - CONFIG_SERVER=http://config-server:8086
 
 volumes:
@@ -106,4 +110,3 @@ volumes:
 networks:
   microservices-network:
     external: true
-

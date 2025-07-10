@@ -24,24 +24,44 @@ func fetchConfigFromServer(url string) (map[string]string, error) {
 		return nil, err
 	}
 	defer resp.Body.Close()
+
 	if resp.StatusCode != 200 {
 		return nil, err
 	}
-	var config map[string]string
-	if err := json.NewDecoder(resp.Body).Decode(&config); err != nil {
+
+	var rawConfig struct {
+		PropertySources []struct {
+			Source map[string]string `json:"source"`
+		} `json:"propertySources"`
+	}
+
+	if err := json.NewDecoder(resp.Body).Decode(&rawConfig); err != nil {
 		return nil, err
 	}
-	return config, nil
+
+	result := make(map[string]string)
+	for _, source := range rawConfig.PropertySources {
+		for k, v := range source.Source {
+			result[k] = v
+		}
+	}
+	return result, nil
 }
 
+
 func init() {
-	configUrl := os.Getenv("CONFIG_URL")
+	configUrl := os.Getenv("CONFIG_SERVER")
 	ConfigSettings = &Config{}
 	if configUrl != "" {
 		for {
-			config, err := fetchConfigFromServer(configUrl)
+			config, err := fetchConfigFromServer(configUrl + "/users-api/default")
+			log.Println(config)
 			if err == nil {
+				// Tenta pegar tanto DATABASE_URL quanto database.url
 				ConfigSettings.DatabaseUrl = config[constants.DATABASE_URL]
+				if ConfigSettings.DatabaseUrl == "" {
+					ConfigSettings.DatabaseUrl = config["database.url"]
+				}
 				if ConfigSettings.DatabaseUrl != "" {
 					break
 				}

@@ -1,0 +1,4 @@
+com/freelaif/project/repository/ProjectRepositoryTest.class
+com/freelaif/project/ProjectApplicationTests.class
+com/freelaif/project/controller/ProjectControllerTest.class
+com/freelaif/project/service/ProjectServiceTest.class
