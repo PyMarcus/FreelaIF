@@ -14,6 +14,18 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-    - name: Build the Docker image
-      run: docker build -f Dockerfile . --tag my-image-name:$(date +%s)
+    - name: Build users-api image
+      run: docker build -f Dockerfile . --tag users-api:$(date +%s)
       working-directory: users-api
+
+    - name: Build spring-projects-api image
+      run: docker build -f Dockerfile . --tag spring-projects-api:$(date +%s)
+      working-directory: project
+
+    - name: Build config-server image
+      run: docker build -f Dockerfile . --tag config-server:$(date +%s)
+      working-directory: config-server/config-server
+
+    - name: Build eureka-server image
+      run: docker build -f Dockerfile . --tag eureka-server:$(date +%s)
+      working-directory: discovery-server/naming-server
