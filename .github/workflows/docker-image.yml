@@ -14,18 +14,44 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+    - name: Login to Docker Hub
+      uses: docker/login-action@v3
+      with:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
+
     - name: Build users-api image
-      run: docker build -f Dockerfile . --tag users-api:$(date +%s)
+      run: |
+        docker build -f Dockerfile . -t users-api:latest
+        docker tag users-api:latest geessyca/users-api:latest
       working-directory: users-api
 
+    - name: Push users-api image
+      run: docker push geessyca/users-api:latest
+
     - name: Build spring-projects-api image
-      run: docker build -f Dockerfile . --tag spring-projects-api:$(date +%s)
+      run: |
+        docker build -f Dockerfile . -t spring-projects-api:latest
+        docker tag spring-projects-api:latest geessyca/spring-projects-api:latest
       working-directory: project
 
+    - name: Push spring-projects-api image
+      run: docker push geessyca/spring-projects-api:latest
+
     - name: Build config-server image
-      run: docker build -f Dockerfile . --tag config-server:$(date +%s)
+      run: |
+        docker build -f Dockerfile . -t config-server:latest
+        docker tag config-server:latest geessyca/config-server:latest
       working-directory: config-server/config-server
 
+    - name: Push config-server image
+      run: docker push geessyca/config-server:latest
+
     - name: Build eureka-server image
-      run: docker build -f Dockerfile . --tag eureka-server:$(date +%s)
+      run: |
+        docker build -f Dockerfile . -t eureka-server:latest
+        docker tag eureka-server:latest geessyca/eureka-server:latest
       working-directory: discovery-server/naming-server
+
+    - name: Push eureka-server image
+      run: docker push geessyca/eureka-server:latest
