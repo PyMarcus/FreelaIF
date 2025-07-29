@@ -8,6 +8,7 @@ import (
 )
 
 func createUsersToTest() (*domain.CustomerEntity, *domain.StudentEntity){
+	
 	return &domain.CustomerEntity{
 			ID:        uuid.New(), 
 			Name:      "Empresa Exemplo Ltda",
