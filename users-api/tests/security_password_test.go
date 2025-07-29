@@ -9,6 +9,7 @@ import (
 
 func TestHashPassword(t *testing.T){
 	password := "test123456&"
+	
 	hash, err := utils.HashPassword(password)
 	assert.NoError(t, err)
 	assert.NotEmpty(t, hash)
