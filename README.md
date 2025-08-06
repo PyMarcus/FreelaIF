@@ -17,6 +17,81 @@ Além disso, a plataforma contará com recursos de:
 - **Recomendações inteligentes** de serviços para freelancers, baseadas em palavras-chave extraídas dos perfis e habilidades cadastradas.
 - **Sugestões automáticas** de freelancers mais adequados para clientes, de acordo com os requisitos dos projetos.
   
+  ## Como rodar os serviços usando Docker Hub
+
+docker network create microservices-network
+docker run --rm -d --name postgres-db-users-api --network microservices-network -e POSTGRES_USER=login -e POSTGRES_PASSWORD=login -e POSTGRES_DB=login_db postgres:15
+docker run --rm -d --platform linux/amd64 --name eureka-server --network microservices-network -p 8761:8761 geessyca/eureka-server
+
+Siga os passos abaixo para baixar as imagens e iniciar os containers dos serviços:
+
+### 1. Baixe as imagens dos serviços
+```bash
+docker pull geessyca/eureka-server
+docker pull geessyca/config-server
+docker pull geessyca/spring-projects-api
+docker pull geessyca/users-api
+```
+
+### 2. Crie a rede Docker para os microserviços
+```bash
+docker network create microservices-network
+```
+
+### 3. Inicie os bancos de dados
+```bash
+docker run --rm -d \
+  --name postgres-db-users-api \
+  --network microservices-network \
+  -e POSTGRES_USER=login \
+  -e POSTGRES_PASSWORD=login \
+  -e POSTGRES_DB=login_db \
+  postgres:15
+
+docker run --rm -d \
+  --name mongodb-projects \
+  --network microservices-network \
+  -p 27017:27017 \
+  -e MONGO_INITDB_DATABASE=freelaif_db \
+  -e MONGO_INITDB_ROOT_USERNAME=freelaif \
+  -e MONGO_INITDB_ROOT_PASSWORD=freelaif \
+  mongo:7.0
+```
+
+### 4. Inicie os serviços
+```bash
+docker run --rm -d --platform linux/amd64 \
+  --name eureka-server \
+  --network microservices-network \
+  -p 8761:8761 \
+  geessyca/eureka-server
+
+docker run --rm -d --platform linux/amd64 \
+  --name config-server \
+  --network microservices-network \
+  -p 8086:8086 \
+  -e EUREKA_SERVER=http://eureka-server:8761/eureka \
+  geessyca/config-server
+
+docker run --rm -d --platform linux/amd64 \
+  --name spring-projects-api \
+  --network microservices-network \
+  -p 8101:8101 \
+  -e EUREKA_SERVER=http://eureka-server:8761/eureka \
+  -e CONFIG_SERVER=http://config-server:8086 \
+  geessyca/spring-projects-api
+
+docker run --rm -d --platform linux/amd64 \
+  --name users-api \
+  --network microservices-network \
+  -p 8080:8080 \
+  -e EUREKA_SERVER=http://eureka-server:8761/eureka \
+  -e CONFIG_SERVER=http://config-server:8086 \
+  geessyca/users-api
+```
+
+Esses comandos irão baixar as imagens necessárias e iniciar todos os serviços em containers conectados à mesma rede Docker.
+
 ## Funcionamento
 
 1. **Cadastro**: Estudantes e clientes realizam seu registro e criam perfis personalizados.
@@ -48,9 +123,6 @@ Segregando as etapas do fluxo em pequenos serviços de entrega contínua.
 
 ## Público-Alvo
 
-- **Estudantes** do Instituto Federal que desejam atuar como freelancers.
-- **Empresas** e **pessoas físicas** da região que buscam mão de obra qualificada para projetos de curta ou média duração.
-- **Administradores da plataforma** que gerenciam usuários, tarefas e taxas.
 
 ## Requisitos do Sistema
 
